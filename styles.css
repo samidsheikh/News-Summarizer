@@ -1,0 +1,160 @@
+/* General Body Styling */
+html, body {
+    min-height: 100vh;
+    overflow-x: hidden; /* Prevents horizontal scrolling */
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(45deg, #d4ff5f, #a2cebe, #92b9cb);
+    text-align: center;
+}
+
+/* Background Effects */
+#vanta-background, #particles-js, #your-element-selector {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+/* Content Wrapper */
+.content {
+    position: relative;
+    z-index: 10;
+    padding: 20px;
+}
+
+/* Heading */
+h1 {
+    color: #333;
+    margin-top: 10px;
+}
+
+/* News Container */
+.news-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* News Card */
+.news-card {
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    width: 320px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+    border-left: 5px solid; /* Default border */
+}
+
+/* ✅ Dynamic Border Colors Based on Sentiment */
+.bg-good { border-left-color: green !important; }
+.bg-bad { border-left-color: red !important; }
+.bg-average { border-left-color: blue !important; }
+
+/* Hover Effect */
+.news-card:hover {
+    transform: scale(1.05);
+}
+
+/* News Card Title */
+.news-card h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+/* News Card Links */
+.news-card a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+.news-card a:hover {
+    text-decoration: underline;
+}
+
+/* News Detail Page Styling */
+.news-detail-container {
+    max-width: 850px;
+    width: 90%;
+    margin: 40px auto;
+    padding: 25px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+/* Headings in News Detail */
+.news-detail-container h2, 
+.news-detail-container h3 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Paragraph Styling */
+.news-detail-container p {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* Back Button */
+.back-button {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 15px;
+    background: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.3s ease-in-out;
+}
+
+.back-button:hover {
+    background: #0056b3;
+}
+
+/* 📢 Share Buttons (Left Aligned & Small Size) */
+.share-buttons {
+    position: fixed;
+    left: 20px;
+    bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;  /* Adjust spacing */
+}
+
+.share-buttons img {
+    width: 28px;  /* Smaller size */
+    height: 28px;
+    transition: transform 0.2s;
+}
+
+.share-buttons img:hover {
+    transform: scale(1.1);
+}
+
+/* 🌊 Wave Animation */
+#wave {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 200px;
+    background: url("https://cdn.pixabay.com/photo/2018/03/30/22/01/wave-3277500_1280.png") repeat-x;
+    background-size: contain;
+    animation: waveMove 10s linear infinite;
+}
+
+
+
+@keyframes waveMove {
+    0% { background-position-x: 0; }
+    100% { background-position-x: 1000px; }
+}
+
+    

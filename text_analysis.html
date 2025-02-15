@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Analysis Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles1.css') }}">
+</head>
+<body class="{% if sentiment.lower() == 'good' %}bg-good
+             {% elif sentiment.lower() == 'bad' %}bg-bad
+             {% else %}bg-average{% endif %}">
+             
+    <div class="content">
+        <h1>News Analysis Result</h1>
+        
+        <h2>Summary:</h2>
+        <p>{{ summary }}</p>
+
+        <!-- <h2>Sentiment:</h2>
+        <p>{{ sentiment }}</p> -->
+
+        <h2>Named Entities:</h2>
+        <ul>
+            {% for entity in ner.split(',') %}
+                <li>{{ entity.strip() }}</li>
+            {% endfor %}
+        </ul>
+
+        <h2>Category:</h2>
+        <p>{{ related_topic }}</p>
+
+        <br>
+        <a href="{{ url_for('index') }}" class="back-button">Go Back to Home</a>
+
+    </div>
+
+    <!-- 📢 Social Share Buttons -->
+    <div class="share-buttons">
+        <a href="https://api.whatsapp.com/send?text={{ summary|urlencode }}" target="_blank">
+            <img src="{{ url_for('static', filename='whatsapp.png') }}" alt="Share on WhatsApp">
+        </a>
+
+        <a href="https://www.facebook.com/sharer/sharer.php?u={{ url|urlencode }}&quote={{ summary|urlencode }}" target="_blank">
+            <img src="{{ url_for('static', filename='facebook.png') }}" alt="Share on Facebook">
+        </a>
+
+        <a href="https://www.instagram.com" target="_blank">
+            <img src="{{ url_for('static', filename='instagram.png') }}" alt="Share on Instagram">
+        </a>
+    </div>
+
+    <!-- 🌊 Wave Background -->
+    <div id="wave"></div>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Summarizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+    <style>
+        /* Sentiment-based card colors */
+        .news-card.good { background-color: #d4edda; } /* Green */
+        .news-card.bad { background-color: #f8d7da; } /* Red */
+        .news-card.average { background-color: #cce5ff; } /* Blue */
+
+        /* Textarea Styling */
+        .text-input-container {
+            text-align: center;
+            margin: 20px auto;
+            width: 80%;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .submit-btn {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* URL History Styling */
+        .history-container {
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+        .history-list {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+            max-height: 150px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        .history-list li {
+            margin-bottom: 5px;
+        }
+        .history-list a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        .history-list a:hover {
+            text-decoration: underline;
+        }
+        .history-btn {
+            margin-left: 10px;
+            padding: 5px 10px;
+            font-size: 14px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .history-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>News Summarizer</h1>
+
+    <!-- 🔎 News URL Input Box -->
+    <form id="newsForm" action="/scrape_news" method="post">
+        <input type="text" name="news_url" id="news_url" placeholder="Enter News URL" required>
+        <button type="submit">Summarize</button>
+        <button onclick="window.location.href='/history'">📜 History</button>
+
+    </form>
+   
+    <!-- 🔹 URL History Container -->
+    <div class="history-container" id="historyContainer">
+        <h3>🔍 Previously Searched URLs</h3>
+        <ul class="history-list" id="historyList"></ul>
+    </div>
+
+    <!-- 📝 Text Input for Direct Summarization -->
+    <div class="text-input-container">
+        <h2>Paste News Content</h2>
+        <form action="/process_text" method="post">
+            <textarea name="news_text" placeholder="Paste the full news article here..." required></textarea>
+            <button type="submit" class="submit-btn">Analyze</button>
+        </form>
+    </div>
+
+    <!-- Display Analysis Results (After Submission) -->
+    {% if summary %}
+        <h2>News Analysis Result:</h2>
+        <div class="news-card {{ sentiment }}">
+            <h2>Summarized News</h2>
+            <p>{{ summary }}</p>
+            <p><strong>Named Entities:</strong> {{ ner }}</p>
+            <p><strong>Category:</strong> {{ related_topic }}</p>
+        </div>
+    {% endif %}
+
+    <!-- Top 10 News -->
+    <h2>Top 10 News</h2>
+    <div class="news-container">
+        {% for news in news_list %}
+            <div class="news-card {{ news.sentiment }}">
+                <h2>
+                    <a href="{{ url_for('news_detail', url=news.url) }}" target="_blank">
+                        {{ news.title }}
+                    </a>
+                </h2>
+                <p><strong>Named Entities:</strong> {{ news.ner }}</p>
+                <p><strong>Category:</strong> {{ news.related_topic }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div id="particles-js"></div>
+
+    <script src="{{ url_for('static', filename='js/particles.js') }}"></script>
+    <script>
+        // 🔹 Load history on page load
+        document.addEventListener("DOMContentLoaded", function() {
+            loadHistory();
+        });
+
+        // 🔹 Store URL History in Local Storage when submitting form
+        document.getElementById('newsForm').addEventListener('submit', function(event) {
+            const newsUrl = document.getElementById('news_url').value;
+            if (newsUrl) {
+                let history = JSON.parse(localStorage.getItem('newsHistory')) || [];
+                if (!history.includes(newsUrl)) {
+                    history.unshift(newsUrl);
+                    if (history.length > 10) history.pop(); // Keep only last 10 URLs
+                    localStorage.setItem('newsHistory', JSON.stringify(history));
+                }
+            }
+        });
+
+        // 🔹 Show/Hide History Panel
+        document.getElementById("history-btn").addEventListener("click", function() {
+            toggleHistory();
+        });
+
+        // 🔹 Load and Display History
+        function loadHistory() {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = '';
+            const history = JSON.parse(localStorage.getItem('newsHistory')) || [];
+
+            history.forEach(url => {
+                const listItem = document.createElement('li');
+                const link = document.createElement('a');
+                link.href = '#';
+                link.innerText = url;
+                link.onclick = function() {
+                    document.getElementById('news_url').value = url;
+                };
+                listItem.appendChild(link);
+                historyList.appendChild(listItem);
+            });
+        }
+
+        // 🔹 Toggle History Panel
+        function toggleHistory() {
+            const historyContainer = document.getElementById('historyContainer');
+            historyContainer.style.display = (historyContainer.style.display === 'none' || historyContainer.style.display === '') ? 'block' : 'none';
+        }
+    </script>
+
+</body>
+</html>

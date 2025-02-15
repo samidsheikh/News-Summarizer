@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
+</head>
+<body>
+
+    <div class="container">
+        <h1>📜 Search History</h1>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>🔗 URL / Entered Text</th>
+                    <th>📜 Summary</th>
+                    <th>📊 Sentiment</th>
+                    <th>📝 Named Entities</th>
+                    <th>📌 Category</th>
+                    <th>⏳ Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in history_data %}
+                <tr>
+                    <td>
+                        {% if entry.url %}
+                            <a href="{{ entry.url }}" target="_blank">{{ entry.url }}</a>
+                        {% else %}
+                            <strong>Manually Entered Text:</strong> {{ entry.searched_text }}
+                        {% endif %}
+                    </td>
+                    <td>{{ entry.summary }}</td>
+                    <td class="{{ entry.sentiment }}">{{ entry.sentiment.capitalize() }}</td>
+                    <td>{{ entry.ner }}</td>
+                    <td>{{ entry.related_topic }}</td>
+                    <td>{{ entry.date }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <button onclick="window.location.href='/'" class="back-button">🏠 Back to Home</button>
+    </div>
+
+</body>
+</html>
